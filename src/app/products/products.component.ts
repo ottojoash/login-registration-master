@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from './product.service';
-import { HttpClient } from '@angular/common/http';
+import { ImageUploadService } from '../services/image-upload.service';
 
 @Component({
   selector: 'app-products',
@@ -20,7 +20,10 @@ export class ProductsComponent implements OnInit {
   products: any[] = [];
   selectedFile: File | null = null;
 
-  constructor(private productService: ProductService, private http: HttpClient) {}
+  constructor(
+    private productService: ProductService,
+    private imageUploadService: ImageUploadService
+  ) {}
 
   ngOnInit() {
     this.getProducts();
@@ -42,34 +45,36 @@ export class ProductsComponent implements OnInit {
   }
 
   onAddProduct() {
-    const formData = new FormData();
     if (this.selectedFile) {
-      formData.append('image', this.selectedFile, this.selectedFile.name);
-    }
-    formData.append('title', this.product.title);
-    formData.append('category', this.product.category);
-    formData.append('description', this.product.description);
-    formData.append('rating', this.product.rating.toString());
-    formData.append('price', this.product.price);
-    formData.append('originalPrice', this.product.originalPrice);
+      this.imageUploadService.uploadImage(this.selectedFile).subscribe((url) => {
+        const formData = new FormData();
+        formData.append('image', url); // Use the image URL returned by the service
+        formData.append('title', this.product.title);
+        formData.append('category', this.product.category);
+        formData.append('description', this.product.description);
+        formData.append('rating', this.product.rating.toString());
+        formData.append('price', this.product.price);
+        formData.append('originalPrice', this.product.originalPrice);
 
-    this.productService.addProduct(formData).subscribe(
-      (data) => {
-        this.products.push(data);
-        this.product = {
-          title: '',
-          category: '',
-          description: '',
-          rating: 0,
-          price: '',
-          originalPrice: ''
-        };
-        this.selectedFile = null;
-        this.showAddProduct = false;
-      },
-      (error) => {
-        console.error('Error adding product:', error);
-      }
-    );
+        this.productService.addProduct(formData).subscribe(
+          (data) => {
+            this.products.push(data);
+            this.product = {
+              title: '',
+              category: '',
+              description: '',
+              rating: 0,
+              price: '',
+              originalPrice: ''
+            };
+            this.selectedFile = null;
+            this.showAddProduct = false;
+          },
+          (error) => {
+            console.error('Error adding product:', error);
+          }
+        );
+      });
+    }
   }
 }

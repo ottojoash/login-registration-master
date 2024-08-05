@@ -5,6 +5,10 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { environment } from '../environments/environments';
+
 // import { OrdersComponent } from './orders/orders.component';
 import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
 
@@ -26,7 +30,9 @@ import { HttpClientModule } from '@angular/common/http';  // Import HttpClientMo
     RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule  
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]
