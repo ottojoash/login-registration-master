@@ -1,0 +1,36 @@
+.navbar {
+    background-color: #f8f9fa;
+  
+    .navbar-brand {
+      font-weight: bold;
+    }
+  
+    .navbar-nav {
+      .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        &:hover {
+          background-color: #e2e6ea;
+        }
+      }
+    }
+  
+    .navbar-toggler {
+      border-color: #007bff;
+  
+      .navbar-toggler-icon {
+        background-image: url('data:image/svg+xml,...'); // Customize the icon here if needed
+      }
+    }
+  
+    // Styling for the drawer menu
+    .collapse {
+      @media (max-width: 767.98px) {
+        .navbar-nav {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+  

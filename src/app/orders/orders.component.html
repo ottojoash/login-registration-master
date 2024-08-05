@@ -1,0 +1,28 @@
+<div class="orders-container">
+    <h2>Orders</h2>
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Username</th>
+          <th>Address</th>
+          <th>Number of Items</th>
+          <th>Size</th>
+          <th>Color</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td data-label="Item">{{ order.item }}</td>
+          <td data-label="Username">{{ order.username }}</td>
+          <td data-label="Address">{{ order.address }}</td>
+          <td data-label="Number of Items">{{ order.numberOfItems }}</td>
+          <td data-label="Size">{{ order.size }}</td>
+          <td data-label="Color">{{ order.color }}</td>
+          <td data-label="Status">{{ order.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

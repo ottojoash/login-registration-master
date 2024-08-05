@@ -1,0 +1,41 @@
+<!-- src/app/categories/categories.component.html -->
+<div class="categories-container">
+    <div class="tabs">
+      <button class="tab-button" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">Add Category</button>
+      <button class="tab-button" [class.active]="activeTab === 'view'" (click)="activeTab = 'view'">View Categories</button>
+    </div>
+  
+    <div class="tab-content" *ngIf="activeTab === 'add'">
+      <h2>Add Category</h2>
+      <form (ngSubmit)="onAddCategory()" #addCategoryForm="ngForm">
+        <div class="form-group">
+          <label for="image">Image URL:</label>
+          <input type="text" id="image" name="image" [(ngModel)]="newCategory.image" required>
+        </div>
+        <div class="form-group">
+          <label for="name">Category Name:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="newCategory.name" required>
+        </div>
+        <button type="submit">Add Category</button>
+      </form>
+    </div>
+  
+    <div class="tab-content" *ngIf="activeTab === 'view'">
+      <h2>All Categories</h2>
+      <table class="categories-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories">
+            <td><img [src]="category.image" alt="{{ category.name }}" class="category-image"></td>
+            <td>{{ category.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
