@@ -28,10 +28,10 @@ export class ProductsComponent implements OnInit {
 
   getProducts() {
     this.productService.getProducts().subscribe(
-      (data) => {
+      (data: any[]) => {
         this.products = data;
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching products:', error);
       }
     );
@@ -54,7 +54,7 @@ export class ProductsComponent implements OnInit {
     formData.append('originalPrice', this.product.originalPrice);
 
     this.productService.addProduct(formData).subscribe(
-      (data) => {
+      (data: any) => {
         this.products.push(data);
         this.product = {
           title: '',
@@ -67,7 +67,7 @@ export class ProductsComponent implements OnInit {
         this.selectedFile = null;
         this.showAddProduct = false;
       },
-      (error) => {
+      (error: any) => {
         console.error('Error adding product:', error);
       }
     );
