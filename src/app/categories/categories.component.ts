@@ -1,6 +1,6 @@
-// src/app/categories/categories.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CategoryService } from '../category.service';
+import { CategoryService } from './category.services';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-categories',
@@ -9,10 +9,11 @@ import { CategoryService } from '../category.service';
 })
 export class CategoriesComponent implements OnInit {
   activeTab: 'add' | 'view' = 'add';
-  newCategory = { image: '', name: '' };
+  newCategory = { name: '' }; // Exclude image from initial form data
   categories: { image: string; name: string }[] = [];
+  selectedFile: File | null = null;
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private http: HttpClient) {}
 
   ngOnInit() {
     this.getCategories();
@@ -20,28 +21,37 @@ export class CategoriesComponent implements OnInit {
 
   getCategories() {
     this.categoryService.getCategories().subscribe(
-      (data) => {
+      (data: any[]) => {
         this.categories = data;
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching categories:', error);
       }
     );
   }
 
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  onAddCategory() {
+    const formData = new FormData();
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+    }
+    formData.append('name', this.newCategory.name); // Ensure this matches the backend field
   
-onAddCategory() {
-  if (this.newCategory.image && this.newCategory.name) {
-    this.categoryService.createCategory(this.newCategory).subscribe(
-      (data) => {
+    this.categoryService.createCategory(formData).subscribe(
+      (data: any) => {
         this.categories.push(data);
-        this.newCategory = { image: '', name: '' }; // Reset form
+        this.newCategory = { name: '' }; // Reset form
+        this.selectedFile = null;
         this.activeTab = 'view'; // Switch to view tab
       },
-      (error) => {
+      (error: any) => {
         console.error('Error adding category:', error);
       }
     );
   }
-}
+  
 }
