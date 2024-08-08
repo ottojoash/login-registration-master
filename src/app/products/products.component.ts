@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProductsComponent implements OnInit {
   showAddProduct = true;
   product = {
+    _id: '', // Add an _id field for editing
     title: '',
     category: '',
     description: '',
@@ -53,23 +54,60 @@ export class ProductsComponent implements OnInit {
     formData.append('price', this.product.price);
     formData.append('originalPrice', this.product.originalPrice);
 
-    this.productService.addProduct(formData).subscribe(
-      (data: any) => {
-        this.products.push(data);
-        this.product = {
-          title: '',
-          category: '',
-          description: '',
-          rating: 0,
-          price: '',
-          originalPrice: ''
-        };
-        this.selectedFile = null;
-        this.showAddProduct = false;
+    if (this.product._id) {
+      // Update product
+      this.productService.updateProduct(this.product._id, formData).subscribe(
+        (data: any) => {
+          const index = this.products.findIndex(p => p._id === this.product._id);
+          this.products[index] = data;
+          this.resetForm();
+          this.showAddProduct = false;
+        },
+        (error: any) => {
+          console.error('Error updating product:', error);
+        }
+      );
+    } else {
+      // Add new product
+      this.productService.addProduct(formData).subscribe(
+        (data: any) => {
+          this.products.push(data);
+          this.resetForm();
+          this.showAddProduct = false;
+        },
+        (error: any) => {
+          console.error('Error adding product:', error);
+        }
+      );
+    }
+  }
+
+  onEditProduct(product: any) {
+    this.product = { ...product }; // Populate the form with the product details
+    this.showAddProduct = true;
+  }
+
+  onDeleteProduct(productId: string) {
+    this.productService.deleteProduct(productId).subscribe(
+      () => {
+        this.products = this.products.filter(p => p._id !== productId);
       },
       (error: any) => {
-        console.error('Error adding product:', error);
+        console.error('Error deleting product:', error);
       }
     );
+  }
+
+  resetForm() {
+    this.product = {
+      _id: '',
+      title: '',
+      category: '',
+      description: '',
+      rating: 0,
+      price: '',
+      originalPrice: ''
+    };
+    this.selectedFile = null;
   }
 }
