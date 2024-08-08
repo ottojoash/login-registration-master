@@ -1,4 +1,3 @@
-<!-- src/app/categories/categories.component.html -->
 <div class="categories-container">
   <div class="tabs">
     <button class="tab-button" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">Add Category</button>
@@ -27,12 +26,17 @@
         <tr>
           <th>Image</th>
           <th>Name</th>
+          <th>Actions</th> <!-- Add actions column -->
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let category of categories">
           <td><img [src]="category.image" alt="{{ category.name }}" class="category-image"></td>
           <td>{{ category.name }}</td>
+          <td>
+            <button (click)="onEditCategory(category)">Edit</button>
+            <button (click)="onDeleteCategory(category._id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>

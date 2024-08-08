@@ -18,4 +18,12 @@ export class CategoryService {
   getCategories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`);
   }
+
+  updateCategory(categoryId: string, formData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}${categoryId}`, formData);
+  }
+
+  deleteCategory(categoryId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}${categoryId}`);
+  }
 }
