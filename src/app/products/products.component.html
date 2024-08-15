@@ -7,10 +7,15 @@
   <div class="tab-content">
     <div *ngIf="showAddProduct">
       <h2>Add Product</h2>
-      <form (ngSubmit)="onAddProduct()" #addProductForm="ngForm">
+      <form (ngSubmit)="onAddProduct()" #addProductForm="ngForm" enctype="multipart/form-data">
         <div class="form-group">
-          <label for="img">Image</label>
-          <input type="file" id="img" (change)="onFileSelected($event)" required>
+          <label for="images">Images</label>
+          <input type="file" id="images" (change)="onFilesSelected($event)" name="images" multiple required>
+          <div class="image-previews" *ngIf="imagePreviews.length">
+            <div *ngFor="let image of imagePreviews">
+              <img [src]="image" alt="Image Preview" width="100" height="100">
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="title">Title</label>
@@ -45,19 +50,23 @@
       <table>
         <thead>
           <tr>
-            <th>Image</th>
+            <th>Images</th>
             <th>Title</th>
             <th>Category</th>
             <th>Description</th>
             <th>Rating</th>
             <th>Price</th>
             <th>Original Price</th>
-            <th>Actions</th> <!-- New Actions column -->
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of products">
-            <td><img [src]="product.image" alt="Product Image" width="50"></td>
+            <td>
+              <div *ngFor="let image of product.images">
+                <img [src]="image" alt="Product Image" width="50">
+              </div>
+            </td>
             <td>{{ product.title }}</td>
             <td>{{ product.category }}</td>
             <td>{{ product.description }}</td>
@@ -67,7 +76,7 @@
             <td>
               <button (click)="onEditProduct(product)">Edit</button>
               <button (click)="onDeleteProduct(product._id)">Delete</button>
-            </td> <!-- Action buttons -->
+            </td>
           </tr>
         </tbody>
       </table>

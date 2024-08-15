@@ -16,10 +16,12 @@ export class ProductsComponent implements OnInit {
     description: '',
     rating: 0,
     price: '',
-    originalPrice: ''
+    originalPrice: '',
+    images: [] as string[] // For storing image URLs
   };
   products: any[] = [];
-  selectedFile: File | null = null;
+  selectedFiles: File[] = [];
+  imagePreviews: string[] = []; // Array to hold image preview URLs
 
   constructor(private productService: ProductService, private http: HttpClient) {}
 
@@ -38,15 +40,24 @@ export class ProductsComponent implements OnInit {
     );
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  onFilesSelected(event: any) {
+    this.selectedFiles = Array.from(event.target.files);
+    this.imagePreviews = []; // Reset image previews
+
+    for (const file of this.selectedFiles) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviews.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   onAddProduct() {
     const formData = new FormData();
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile, this.selectedFile.name);
-    }
+    this.selectedFiles.forEach(file => {
+      formData.append('images', file, file.name);
+    });
     formData.append('title', this.product.title);
     formData.append('category', this.product.category);
     formData.append('description', this.product.description);
@@ -84,6 +95,7 @@ export class ProductsComponent implements OnInit {
 
   onEditProduct(product: any) {
     this.product = { ...product }; // Populate the form with the product details
+    this.imagePreviews = product.images || []; // Set image previews for editing
     this.showAddProduct = true;
   }
 
@@ -106,8 +118,10 @@ export class ProductsComponent implements OnInit {
       description: '',
       rating: 0,
       price: '',
-      originalPrice: ''
+      originalPrice: '',
+      images: []
     };
-    this.selectedFile = null;
+    this.selectedFiles = [];
+    this.imagePreviews = []; // Reset image previews
   }
 }

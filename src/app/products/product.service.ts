@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'https://backendshop-9nf6.onrender.com/api/shop/products';
+  private apiUrl = 'http://localhost:3000/api/shop/products';
 
   constructor(private http: HttpClient) {}
 
